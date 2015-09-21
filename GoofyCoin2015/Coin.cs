@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GoofyCoin2015
 {
+    [Serializable()]
     public class Coin
     {
         private Int32 coinId;
+        [field: NonSerializedAttribute()]
         private SignedMessage sgndCoin;
 
         public Coin(Signature mySignature)
@@ -20,6 +18,10 @@ namespace GoofyCoin2015
         public Boolean isGoofyCoin()
         {
             return sgndCoin.PublicKey == Global.GoofyPk;
+        }
+        public Boolean isValidSignature()
+        {
+            return sgndCoin.isValidSignedMsg(this);
         }
     }
 }

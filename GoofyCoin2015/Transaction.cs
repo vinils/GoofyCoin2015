@@ -1,23 +1,22 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GoofyCoin2015
 {
-    public class Transaction
+    [Serializable()]
+    public class Transaction: IEnumerable<Transaction>
     {
         private Coin coin;
         private Transaction previous;
         private SignedMessage previousTransSignedByMe;
-        private String receiverPk;
+        private byte[] receiverPk;
 
         private Transaction()
         {
         }
 
-        public Transaction(Coin coin, String receiverPk)
+        public Transaction(Coin coin, byte[] receiverPk)
         {
             this.coin = coin;
             this.previous = null;
@@ -25,7 +24,7 @@ namespace GoofyCoin2015
             this.receiverPk = receiverPk;
         }
 
-        public Transaction Payto(SignedMessage sgndTrans, String receiverPk)
+        public Transaction Payto(SignedMessage sgndTrans, byte[] receiverPk)
         {
             var trans = new Transaction();
             trans.previous = this;
@@ -47,21 +46,41 @@ namespace GoofyCoin2015
 
         public void CheckTransaction()
         {
-            var actualTrans = this;
-
-            if (isFirstTransaction())
+            foreach (var trans in this)
             {
-                if (!coin.isGoofyCoin())
-                    throw new Exception("This coin don't belong to Goofy");
-            }
-            else
-            {
-                if (!actualTrans.previousTransSignedByMe.isValidSignedMsg())
-                    throw new Exception("The signature of the previous transaction don't match with the public key");
+                if (trans.isFirstTransaction())
+                {
+                    if (!trans.coin.isGoofyCoin())
+                        throw new Exception("This coin don't belong to Goofy");
 
-                if (!actualTrans.isValidTransaction())
-                    throw new Exception("The transaction dosen't belong to the owner");
+                    if (!trans.coin.isValidSignature())
+                        throw new Exception("This coin signature is invalid");
+                }
+                else
+                {
+                    if (!trans.isValidTransaction())
+                        throw new Exception("The transaction dosen't belong to the owner");
+
+                    if (!trans.previousTransSignedByMe.isValidSignedMsg(trans.previous))
+                        throw new Exception("The signature of the previous transaction and his pk are invalid");
+                }
             }
+        }
+
+        IEnumerator<Transaction> IEnumerable<Transaction>.GetEnumerator()
+        {
+            Transaction trans = this;
+
+            do
+            {
+                yield return trans;
+                trans = trans.previous;
+            } while (trans != null);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
 }

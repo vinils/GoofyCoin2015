@@ -1,37 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace GoofyCoin2015
 {
+    [Serializable()]
     public class SignedMessage
     {
-        private String sgndMsg;
-        protected String publicKey;
+        private byte[] sgndMsg;
+        protected byte[] publicKey;
 
-        public String PublicKey
+        public byte[] PublicKey
         {
             get { return publicKey; }
             private set { publicKey = value; }
         }
 
-        public String SignedMsg
+        public byte[] SignedMsg
         {
             get { return sgndMsg; }
             private set { sgndMsg = value; }
         }
 
-        public SignedMessage(Signature mySignature, String signedMsg)
+        public SignedMessage(Signature mySignature, byte[] signedMsg)
         {
             PublicKey = mySignature.PublicKey;
             SignedMsg = signedMsg;
         }
 
-        public Boolean isValidSignedMsg()
+        public Boolean isValidSignedMsg(Coin message)
         {
-            return PublicKey[0] == SignedMsg[0];
+            return isValidSignedMsg((Object)message);
+        }
+
+        public Boolean isValidSignedMsg(Transaction message)
+        {
+            return isValidSignedMsg((Object)message);
+        }
+
+        private Boolean isValidSignedMsg(Object obj)
+        {
+            Boolean bReturn;
+
+            var bObj = Global.ConvertObjetToArrayByte(obj);
+
+            using (var dsa = new ECDsaCng(CngKey.Import(PublicKey, CngKeyBlobFormat.EccPublicBlob)))
+            {
+                dsa.HashAlgorithm = Global.HashAlgorithm;
+
+                // verifying hashed message
+                //bReturn = dsa.VerifyHash(dataHash, SignedMsg);
+                bReturn = dsa.VerifyData(bObj, SignedMsg);
+            }
+
+            return bReturn;
         }
     }
 }
