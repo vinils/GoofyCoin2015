@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography;
 
 namespace GoofyCoin2015
 {
@@ -33,7 +31,11 @@ namespace GoofyCoin2015
             clark.AddTransaction(bobTrans);
 
 
-    
+            Tests.GoofyCreateAndTansferCoin_SouldHaveValidCoin();
+            Tests.ReceivingAndMaekingTransfer_SouldHaveValidTransactionChain();
+            Tests.ReceivingAndMaekingManyTransfer_SouldHaveValidTransactionChain();
+            Tests.DoubleSpendAttach_SouldHaveValidTransactionChain();
+
             //byte[] publickey;
             //byte[] data;
             //byte[] dataHash;
