@@ -10,26 +10,26 @@ namespace GoofyCoin2015
         private Coin coin;
         private Transaction previous;
         private SignedMessage previousTransSignedByMe;
-        private byte[] transactionDestinyPk;
+        private byte[] receiverPk;
 
         private Transaction()
         {
         }
 
-        public Transaction(Coin coin, byte[] destinyPk)
+        public Transaction(Coin coin, byte[] receiverPk)
         {
             this.coin = coin;
             this.previous = null;
             this.previousTransSignedByMe = null;
-            this.transactionDestinyPk = destinyPk;
+            this.receiverPk = receiverPk;
         }
 
-        public Transaction Payto(SignedMessage sgndTrans, byte[] destinyPk)
+        public Transaction Payto(SignedMessage sgndTrans, byte[] receiverPk)
         {
             var trans = new Transaction();
             trans.previous = this;
             trans.previousTransSignedByMe = sgndTrans;
-            trans.transactionDestinyPk = destinyPk;
+            trans.receiverPk = receiverPk;
 
             return trans;
         }
@@ -41,7 +41,7 @@ namespace GoofyCoin2015
 
         private Boolean isValidTransaction()
         {
-            return previous.transactionDestinyPk == previousTransSignedByMe.PublicKey;
+            return previous.receiverPk == previousTransSignedByMe.PublicKey;
         }
 
         public void CheckTransaction()
