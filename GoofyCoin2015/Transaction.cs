@@ -44,6 +44,11 @@ namespace GoofyCoin2015
             return previous.transactionDestinyPk == previousTransSignedByMe.PublicKey;
         }
 
+        private Boolean isValidSignedMsg()
+        {
+            return previousTransSignedByMe.isValidSignedMsg(previous);
+        }
+
         public void CheckTransaction()
         {
             foreach (var trans in this)
@@ -61,7 +66,7 @@ namespace GoofyCoin2015
                     if (!trans.isValidTransaction())
                         throw new Exception("The transaction dosen't belong to the owner");
 
-                    if (!trans.previousTransSignedByMe.isValidSignedMsg(trans.previous))
+                    if (!trans.isValidSignedMsg())
                         throw new Exception("The signature of the previous transaction and his pk are invalid");
                 }
             }
