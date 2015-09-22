@@ -1,5 +1,5 @@
-# GoofyCoin2015
-Centralized digital currency
+﻿# GoofyCoin2015
+Simpliest digital currency
 
 GoofyCoin
 Is about the simplest cryptocurrency we can imagine. There
