@@ -7,21 +7,27 @@ namespace GoofyCoin2015
     {
         private Int32 coinId;
         [field: NonSerializedAttribute()]
-        private SignedMessage sgndCoin;
+        private SignedMessage signature;
 
         public Coin(Signature mySignature)
         {
             coinId = Counter.Coin;
-            sgndCoin = mySignature.SignMessage(this);
+            Signature = mySignature.SignMessage(this);
+        }
+
+        public SignedMessage Signature
+        {
+            get { return signature; }
+            set { signature = value; }
         }
 
         public Boolean isGoofyCoin()
         {
-            return sgndCoin.PublicKey == Global.GoofyPk;
+            return Signature.PublicKey == Global.GoofyPk;
         }
         public Boolean isValidSignature()
         {
-            return sgndCoin.isValidSignedMsg(this);
+            return Signature.isValidSignedMsg(this);
         }
     }
 }

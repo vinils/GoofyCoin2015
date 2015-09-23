@@ -12,13 +12,37 @@ namespace GoofyCoin2015
         private SignedMessage previousTransSignedByMe;
         private byte[] transactionDestinyPk;
 
+        public byte[] TransactionDestinyPk
+        {
+            get { return transactionDestinyPk; }
+            set { transactionDestinyPk = value; }
+        }
+
+        public SignedMessage PreviousTransSignedByMe
+        {
+            get { return previousTransSignedByMe; }
+            set { previousTransSignedByMe = value; }
+        }
+
+        public Transaction Previous
+        {
+            get { return previous; }
+            set { previous = value; }
+        }
+
+        public Coin Coin
+        {
+            get { return coin; }
+            set { coin = value; }
+        }
+
         private Transaction()
         {
         }
 
         public Transaction(Coin coin, byte[] destinyPk)
         {
-            this.coin = coin;
+            this.Coin = coin;
             this.previous = null;
             this.previousTransSignedByMe = null;
             this.transactionDestinyPk = destinyPk;
@@ -34,17 +58,17 @@ namespace GoofyCoin2015
             return trans;
         }
 
-        private Boolean isFirstTransaction()
+        public Boolean isFirstTransaction()
         {
             return previous == null;
         }
 
-        private Boolean isValidTransaction()
+        public Boolean isOwnerTransction()
         {
             return previous.transactionDestinyPk == previousTransSignedByMe.PublicKey;
         }
 
-        private Boolean isValidSignedMsg()
+        public Boolean isValidSignedMsg()
         {
             return previousTransSignedByMe.isValidSignedMsg(previous);
         }
@@ -55,15 +79,15 @@ namespace GoofyCoin2015
             {
                 if (trans.isFirstTransaction())
                 {
-                    if (!trans.coin.isGoofyCoin())
+                    if (!trans.Coin.isGoofyCoin())
                         throw new Exception("This coin don't belong to Goofy");
 
-                    if (!trans.coin.isValidSignature())
+                    if (!trans.Coin.isValidSignature())
                         throw new Exception("This coin signature is invalid");
                 }
                 else
                 {
-                    if (!trans.isValidTransaction())
+                    if (!trans.isOwnerTransction())
                         throw new Exception("The transaction dosen't belong to the owner");
 
                     if (!trans.isValidSignedMsg())

@@ -11,23 +11,29 @@ namespace GoofyCoin2015
         public static void GoofyCreateAndTansferCoin_SouldHaveValidCoin()
         {
             //Arrange
-            var signature = new Signature(256);
-            Global.GoofyPk = signature.PublicKey;
+            var goofySignature = new Signature(256);
+            Global.GoofyPk = goofySignature.PublicKey;
 
-            var coin = new Coin(signature);
+            var goofyCoin = new Coin(goofySignature);
 
             //Act
-            var trans = new Transaction(coin, new Signature(256).PublicKey);
+            var destiny = new Signature(256);
+            var trans = new Transaction(goofyCoin, destiny.PublicKey);
 
             //Assert
 
             try
             {
-                //trans.CheckTransaction();
+                //if(trans.Coin!=null)
+                if(!trans.isFirstTransaction())
+                    throw new Exception("This is the first transaction");
 
-                if (!coin.isGoofyCoin())
+                //if(trans.Coin.Signature.PublicKey != Global.GoofyPk)
+                if (!trans.Coin.isGoofyCoin())
                     throw new Exception("This coin doenst belong to Goofy");
-                if (!coin.isValidSignature())
+
+                //if(trans.Coin.Signature.isValidSignedMsg(trans.Coin))
+                if (!trans.Coin.isValidSignature())
                     throw new Exception("This coin signature is invalid");
             }
             catch (Exception e)
@@ -41,7 +47,6 @@ namespace GoofyCoin2015
             //Arrange
             var goofy = new Goofy();
             var person1 = new Signature(256);
-            var person2 = new Person();
 
             Global.GoofyPk = goofy.PublicKey;
 
@@ -49,17 +54,21 @@ namespace GoofyCoin2015
 
             //Action
             var sgndTrans1 = person1.SignMessage(trans1);
-
-            var trans2 = trans1.Payto(sgndTrans1, person2.PublicKey);
+            var destiny = new Person();
+            var trans2 = trans1.Payto(sgndTrans1, destiny.PublicKey);
 
             //Assert
             try
             {
-                //trans2.isValidTransaction();  //previous.receiverPk == previousTransSignedByMe.PublicKey;
-                trans2.CheckTransaction();
+                //previous.receiverPk != previousTransSignedByMe.PublicKey;
+                //if(trans2.Previous.TransactionDestinyPk != trans2.PreviousTransSignedByMe.PublicKey)
+                if (!trans2.isOwnerTransction())
+                    throw new Exception("The transaction dosen't belong to the owner");
 
-                if (!sgndTrans1.isValidSignedMsg(trans1))
-                    throw new Exception("The signature of the previous transaction and his pk are invalid");
+                //!previousTransSignedByMe.isValidSignedMsg(previous);
+                //if (!trans2.PreviousTransSignedByMe.isValidSignedMsg(trans2.Previous))
+                if(!trans2.isValidSignedMsg())
+                    throw new Exception("The previous transaction and his signature dont match");
             }
             catch (Exception e)
             {
@@ -73,7 +82,6 @@ namespace GoofyCoin2015
             var goofy = new Goofy();
             var person1 = new Person();
             var person2 = new Person();
-            var person3 = new Person();
 
             Global.GoofyPk = goofy.PublicKey;
 
@@ -85,11 +93,13 @@ namespace GoofyCoin2015
             var trans2 = person1.PayTo(person2.PublicKey);
             person2.AddTransaction(trans2);
 
-            var trans3 = person2.PayTo(person3.PublicKey);
+            var destiny = new Person();
+            var trans3 = person2.PayTo(destiny.PublicKey);
 
             //Assert
             try
             {
+                //testing the for loop
                 trans3.CheckTransaction();
             }
             catch (Exception e)
@@ -102,30 +112,29 @@ namespace GoofyCoin2015
         {
             //Arrange
             var goofy = new Goofy();
-            var person1 = new Signature(256);
-            var person2 = new Person();
-            var person3 = new Person();
+            var attacker = new Signature(256);
 
             Global.GoofyPk = goofy.PublicKey;
 
-            var trans1 = goofy.CreateCoin(person1.PublicKey);
+            var trans1 = goofy.CreateCoin(attacker.PublicKey);
 
             //Action
-            var sgndTrans1 = person1.SignMessage(trans1);
-            var trans2 = trans1.Payto(sgndTrans1, person2.PublicKey);
-            var trans3 = trans1.Payto(sgndTrans1, person3.PublicKey);
+            var sgndTrans1 = attacker.SignMessage(trans1);
+            var destiny1 = new Person();
+            var trans2 = trans1.Payto(sgndTrans1, destiny1.PublicKey);
+            var destiny2 = new Person();
+            var trans3 = trans1.Payto(sgndTrans1, destiny2.PublicKey);
 
             //Assert
             try
             {
-                trans2.CheckTransaction();
-                trans3.CheckTransaction();
+                if (trans2.isValidSignedMsg() && trans3.isValidSignedMsg())
+                    throw new Exception("its not allowed to double spend the same coin");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
-
     }
 }
