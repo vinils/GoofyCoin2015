@@ -20,7 +20,7 @@ namespace GoofyCoin2015
 
         public void AddTransaction(Transaction trans)
         {
-            trans.CheckTransaction();
+            CheckTransaction(trans);
             wallet.Add(trans);
         }
 
@@ -32,6 +32,14 @@ namespace GoofyCoin2015
             wallet.Remove(trans);
 
             return paidTransaction;
+        }
+
+        private void CheckTransaction(Transaction transaction)
+        {
+            foreach(var trans in transaction)
+            {
+                trans.CheckTransaction();
+            }
         }
     }
 }

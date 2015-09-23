@@ -18,23 +18,22 @@ namespace GoofyCoin2015
 
             //Act
             var destiny = new Signature(256);
-            var trans = new Transaction(goofyCoin, destiny.PublicKey);
+            var trans = new GoofyTransaction(goofyCoin, destiny.PublicKey);
 
             //Assert
 
             try
             {
-                //if(trans.Coin!=null)
-                if(!trans.isFirstTransaction())
-                    throw new Exception("This is the first transaction");
-
                 //if(trans.Coin.Signature.PublicKey != Global.GoofyPk)
                 if (!trans.Coin.isGoofyCoin())
                     throw new Exception("This coin doenst belong to Goofy");
 
-                //if(trans.Coin.Signature.isValidSignedMsg(trans.Coin))
-                if (!trans.Coin.isValidSignature())
+                //if(trans.Coin.Signature.isValidSignature(trans.Coin))
+                if (!trans.isValidSignedMsg())
                     throw new Exception("This coin signature is invalid");
+
+                //both validation and virtual method
+                ((Transaction)trans).CheckTransaction();
             }
             catch (Exception e)
             {
@@ -42,7 +41,7 @@ namespace GoofyCoin2015
             }
         }
 
-        public static void ReceivingAndMaekingTransfer_SouldHaveValidTransactionChain()
+        public static void ReceivingAndMaekingTransfer_SouldHaveValidTransaction()
         { 
             //Arrange
             var goofy = new Goofy();
@@ -61,14 +60,16 @@ namespace GoofyCoin2015
             try
             {
                 //previous.receiverPk != previousTransSignedByMe.PublicKey;
-                //if(trans2.Previous.TransactionDestinyPk != trans2.PreviousTransSignedByMe.PublicKey)
-                if (!trans2.isOwnerTransction())
+                if(trans2.Previous.TransactionDestinyPk != trans2.PreviousTransSignedByMe.PublicKey)
                     throw new Exception("The transaction dosen't belong to the owner");
 
                 //!previousTransSignedByMe.isValidSignedMsg(previous);
-                //if (!trans2.PreviousTransSignedByMe.isValidSignedMsg(trans2.Previous))
-                if(!trans2.isValidSignedMsg())
+                if (!trans2.PreviousTransSignedByMe.isValidSignedMsg(trans2.Previous))
                     throw new Exception("The previous transaction and his signature dont match");
+
+                //both validation and the virtual methods
+                trans2.CheckTransaction();
+
             }
             catch (Exception e)
             {
@@ -86,21 +87,17 @@ namespace GoofyCoin2015
             Global.GoofyPk = goofy.PublicKey;
 
             var trans1 = goofy.CreateCoin(person1.PublicKey);
-
-            //Action
             person1.AddTransaction(trans1);
 
+            //Action
             var trans2 = person1.PayTo(person2.PublicKey);
-            person2.AddTransaction(trans2);
 
-            var destiny = new Person();
-            var trans3 = person2.PayTo(destiny.PublicKey);
 
             //Assert
             try
             {
-                //testing the for loop
-                trans3.CheckTransaction();
+                //testing the for loop checktransaction
+                person2.AddTransaction(trans2);
             }
             catch (Exception e)
             {

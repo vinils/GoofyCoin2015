@@ -18,6 +18,8 @@ namespace GoofyCoin2015
             //goofy transaction
             var goofyTrans = goofy.CreateCoin(alice.PublicKey);
 
+            Transaction asdf = goofyTrans;
+
             //alice transaction
             alice.AddTransaction(goofyTrans);
             var aliceTrans = alice.PayTo(bob.PublicKey);
@@ -32,7 +34,7 @@ namespace GoofyCoin2015
 
 
             Tests.GoofyCreateAndTansferCoin_SouldHaveValidCoin();
-            Tests.ReceivingAndMaekingTransfer_SouldHaveValidTransactionChain();
+            Tests.ReceivingAndMaekingTransfer_SouldHaveValidTransaction();
             Tests.ReceivingAndMaekingManyTransfer_SouldHaveValidTransactionChain();
             Tests.DoubleSpendAttach_SouldHaveValidTransactionChain();
 
