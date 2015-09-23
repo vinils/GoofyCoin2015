@@ -36,7 +36,8 @@ namespace GoofyCoin2015
             Tests.GoofyCreateAndTansferCoin_SouldHaveValidCoin();
             Tests.ReceivingAndMaekingTransfer_SouldHaveValidTransaction();
             Tests.ReceivingAndMaekingManyTransfer_SouldHaveValidTransactionChain();
-            Tests.DoubleSpendAttach_SouldHaveValidTransactionChain();
+            Tests.ChengeTransfer_SouldNotAffectTransactionChain();
+            Tests.DoubleSpendAttack_SouldHaveValidTransactionChain();
 
             //byte[] publickey;
             //byte[] data;

@@ -14,6 +14,7 @@ namespace GoofyCoin2015
         public byte[] TransactionDestinyPk
         {
             get { return transactionDestinyPk; }
+            set { transactionDestinyPk = value; }
         }
 
         public SignedMessage PreviousTransSignedByMe

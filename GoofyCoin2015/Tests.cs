@@ -77,6 +77,41 @@ namespace GoofyCoin2015
             }
         }
 
+        /// <summary>
+        /// Attacker change a transfer in the middle of the chain and make the chain invalid
+        /// </summary>
+        public static void ChengeTransfer_SouldNotAffectTransactionChain()
+        {
+            //Arrange
+            var goofy = new Goofy();
+            var changer = new Signature(256);
+            var person1 = new Person();
+            var person2 = new Person();
+
+            Global.GoofyPk = goofy.PublicKey;
+            var trans1 = goofy.CreateCoin(changer.PublicKey);
+
+            var changerSgndTrans = changer.SignMessage(trans1);
+            var changerTransaction = trans1.Payto(changerSgndTrans, person1.PublicKey);
+
+            person1.AddTransaction(changerTransaction);
+
+            var tran3 = person1.PayTo(person2.PublicKey);
+
+            //Act
+            changerTransaction.TransactionDestinyPk = null;
+
+            //Assert
+            try
+            {
+                person2.AddTransaction(tran3);
+            }
+            catch 
+            {
+                Console.WriteLine("Transfer chain is broked because someone change a another transfer in the middle.");
+            }
+        }
+
         public static void ReceivingAndMaekingManyTransfer_SouldHaveValidTransactionChain()
         {
             //Arrange
@@ -105,7 +140,7 @@ namespace GoofyCoin2015
             }
         }
 
-        public static void DoubleSpendAttach_SouldHaveValidTransactionChain()
+        public static void DoubleSpendAttack_SouldHaveValidTransactionChain()
         {
             //Arrange
             var goofy = new Goofy();
@@ -126,7 +161,7 @@ namespace GoofyCoin2015
             try
             {
                 if (trans2.isValidSignedMsg() && trans3.isValidSignedMsg())
-                    throw new Exception("its not allowed to double spend the same coin");
+                    throw new Exception("Its not allowed to double spend the same coin.");
             }
             catch (Exception e)
             {
