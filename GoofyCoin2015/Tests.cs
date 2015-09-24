@@ -33,7 +33,7 @@ namespace GoofyCoin2015
                     throw new Exception("This coin signature is invalid");
 
                 //both validation and virtual method
-                ((Transaction)trans).CheckTransaction();
+                ((TransactionLinkedList)trans).CheckTransaction();
             }
             catch (Exception e)
             {
@@ -60,11 +60,13 @@ namespace GoofyCoin2015
             try
             {
                 //previous.receiverPk != previousTransSignedByMe.PublicKey;
-                if(trans2.Previous.TransactionDestinyPk != trans2.PreviousTransSignedByMe.PublicKey)
-                    throw new Exception("The transaction dosen't belong to the owner");
+                //if(trans2.Previous.TransactionDestinyPk != trans2.PreviousTransSignedByMe.PublicKey)
+                if(trans2.isOwnerTransction())
+                throw new Exception("The transaction dosen't belong to the owner");
 
                 //!previousTransSignedByMe.isValidSignedMsg(previous);
-                if (!trans2.PreviousTransSignedByMe.isValidSignedMsg(trans2.Previous))
+                //if (!trans2.PreviousTransSignedByMe.isValidSignedMsg(trans2.Previous))
+                if(!trans2.isValidSignedMsg())
                     throw new Exception("The previous transaction and his signature dont match");
 
                 //both validation and the virtual methods
@@ -99,7 +101,7 @@ namespace GoofyCoin2015
             var tran3 = person1.PayTo(person2.PublicKey);
 
             //Act
-            changerTransaction.TransactionDestinyPk = null;
+            changerTransaction.DestinyPk = null;
 
             //Assert
             try

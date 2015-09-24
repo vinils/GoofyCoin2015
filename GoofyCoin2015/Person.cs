@@ -6,7 +6,7 @@ namespace GoofyCoin2015
     public class Person
     {
         private static readonly int sizeKey = 256;
-        private List<Transaction> wallet = new List<Transaction>();
+        private List<TransactionLinkedList> wallet = new List<TransactionLinkedList>();
         protected Signature mySignature = new Signature(sizeKey);
 
         public byte[] PublicKey
@@ -18,13 +18,13 @@ namespace GoofyCoin2015
         {
         }
 
-        public void AddTransaction(Transaction trans)
+        public void AddTransaction(TransactionLinkedList trans)
         {
             CheckTransaction(trans);
             wallet.Add(trans);
         }
 
-        public Transaction PayTo(byte[] publicKey)
+        public TransactionLinkedList PayTo(byte[] publicKey)
         {
             var trans = wallet.Last();
             var sgndTrans = mySignature.SignMessage(trans);
@@ -34,7 +34,7 @@ namespace GoofyCoin2015
             return paidTransaction;
         }
 
-        private void CheckTransaction(Transaction transaction)
+        private void CheckTransaction(TransactionLinkedList transaction)
         {
             foreach(var trans in transaction)
             {

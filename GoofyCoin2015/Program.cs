@@ -18,8 +18,6 @@ namespace GoofyCoin2015
             //goofy transaction
             var goofyTrans = goofy.CreateCoin(alice.PublicKey);
 
-            Transaction asdf = goofyTrans;
-
             //alice transaction
             alice.AddTransaction(goofyTrans);
             var aliceTrans = alice.PayTo(bob.PublicKey);

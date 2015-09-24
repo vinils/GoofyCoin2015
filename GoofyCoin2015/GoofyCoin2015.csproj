@@ -54,7 +54,8 @@
     <Compile Include="Signature.cs" />
     <Compile Include="SignedMessage.cs" />
     <Compile Include="Tests.cs" />
-    <Compile Include="Transaction.cs" />
+    <Compile Include="TransactionInfo.cs" />
+    <Compile Include="TransactionLinkedList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace GoofyCoin2015
 {
     [Serializable()]
-    public class GoofyTransaction: Transaction
+    public class GoofyTransaction: TransactionLinkedList
     {
         private Coin coin;
 
