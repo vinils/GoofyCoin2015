@@ -54,14 +54,15 @@ namespace GoofyCoin2015
             //Action
             var sgndTrans1 = person1.SignMessage(trans1);
             var destiny = new Person();
-            var trans2 = trans1.Payto(sgndTrans1, destiny.PublicKey);
+            var transInfo = new TransactionInfo(sgndTrans1, destiny.PublicKey);
+            var trans2 = trans1.Payto(transInfo);
 
             //Assert
             try
             {
                 //previous.receiverPk != previousTransSignedByMe.PublicKey;
                 //if(trans2.Previous.TransactionDestinyPk != trans2.PreviousTransSignedByMe.PublicKey)
-                if(trans2.isOwnerTransction())
+                if(!trans2.isOwnerTransction())
                 throw new Exception("The transaction dosen't belong to the owner");
 
                 //!previousTransSignedByMe.isValidSignedMsg(previous);
@@ -94,7 +95,8 @@ namespace GoofyCoin2015
             var trans1 = goofy.CreateCoin(changer.PublicKey);
 
             var changerSgndTrans = changer.SignMessage(trans1);
-            var changerTransaction = trans1.Payto(changerSgndTrans, person1.PublicKey);
+            var transInfo = new TransactionInfo(changerSgndTrans, person1.PublicKey);
+            var changerTransaction = trans1.Payto(transInfo);
 
             person1.AddTransaction(changerTransaction);
 
@@ -155,9 +157,11 @@ namespace GoofyCoin2015
             //Action
             var sgndTrans1 = attacker.SignMessage(trans1);
             var destiny1 = new Person();
-            var trans2 = trans1.Payto(sgndTrans1, destiny1.PublicKey);
+            var transInfo1 = new TransactionInfo(sgndTrans1, destiny1.PublicKey);
+            var trans2 = trans1.Payto(transInfo1);
             var destiny2 = new Person();
-            var trans3 = trans1.Payto(sgndTrans1, destiny2.PublicKey);
+            var transInfo2 = new TransactionInfo(sgndTrans1, destiny2.PublicKey);
+            var trans3 = trans1.Payto(transInfo2);
 
             //Assert
             try

@@ -28,7 +28,8 @@ namespace GoofyCoin2015
         {
             var trans = wallet.Last();
             var sgndTrans = mySignature.SignMessage(trans);
-            var paidTransaction = trans.Payto(sgndTrans, publicKey);
+            var transInfo = new TransactionInfo(sgndTrans, publicKey);
+            var paidTransaction = trans.Payto(transInfo);
             wallet.Remove(trans);
 
             return paidTransaction;

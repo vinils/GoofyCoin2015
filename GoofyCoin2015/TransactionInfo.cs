@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace GoofyCoin2015
 {
     [Serializable()]
-    public abstract class TransactionInfo
+    public class TransactionInfo
     {
         private SignedMessage previousTransSignedByMe;
         private byte[] destinyPk;

@@ -17,15 +17,15 @@ namespace GoofyCoin2015
             get { return previous; }
         }
 
-        public TransactionLinkedList(TransactionLinkedList previous, SignedMessage previousTransSignedByMe, byte[] destinyPk)
-            :base(previousTransSignedByMe, destinyPk)
+        public TransactionLinkedList(TransactionLinkedList previous, TransactionInfo trans)
+            :base(trans.PreviousTransSignedByMe, trans.DestinyPk)
         {
             this.previous = previous;
         }
 
-        public TransactionLinkedList Payto(SignedMessage sgndTrans, byte[] destinyPk)
+        public TransactionLinkedList Payto(TransactionInfo trans)
         {
-            return new TransactionLinkedList(this, sgndTrans, destinyPk);
+            return new TransactionLinkedList(this, trans);
         }
 
         public virtual void CheckTransaction()

@@ -15,7 +15,7 @@ namespace GoofyCoin2015
         }
 
         public GoofyTransaction(Coin coin, byte[] destinyPk)
-            : base(null, null, destinyPk)
+            : base(null, new TransactionInfo(null, destinyPk))
         {
             this.coin = coin;
         }
