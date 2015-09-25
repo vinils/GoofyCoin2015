@@ -25,7 +25,7 @@ namespace GoofyCoin2015
             try
             {
                 //if(trans.Coin.Signature.PublicKey != Global.GoofyPk)
-                if (!trans.Coin.isGoofyCoin())
+                if (!trans.isOwnerTransction())
                     throw new Exception("This coin doenst belong to Goofy");
 
                 //if(trans.Coin.Signature.isValidSignature(trans.Coin))
@@ -33,7 +33,7 @@ namespace GoofyCoin2015
                     throw new Exception("This coin signature is invalid");
 
                 //both validation and virtual method
-                ((TransactionLinkedList)trans).CheckTransaction();
+                ((TransferLinkedList)trans).CheckTransaction();
             }
             catch (Exception e)
             {
@@ -54,7 +54,7 @@ namespace GoofyCoin2015
             //Action
             var sgndTrans1 = person1.SignMessage(trans1);
             var destiny = new Person();
-            var transInfo = new TransactionInfo(sgndTrans1, destiny.PublicKey);
+            var transInfo = new TransferInfo(sgndTrans1, destiny.PublicKey);
             var trans2 = trans1.Payto(transInfo);
 
             //Assert
@@ -95,7 +95,7 @@ namespace GoofyCoin2015
             var trans1 = goofy.CreateCoin(changer.PublicKey);
 
             var changerSgndTrans = changer.SignMessage(trans1);
-            var transInfo = new TransactionInfo(changerSgndTrans, person1.PublicKey);
+            var transInfo = new TransferInfo(changerSgndTrans, person1.PublicKey);
             var changerTransaction = trans1.Payto(transInfo);
 
             person1.AddTransaction(changerTransaction);
@@ -157,10 +157,10 @@ namespace GoofyCoin2015
             //Action
             var sgndTrans1 = attacker.SignMessage(trans1);
             var destiny1 = new Person();
-            var transInfo1 = new TransactionInfo(sgndTrans1, destiny1.PublicKey);
+            var transInfo1 = new TransferInfo(sgndTrans1, destiny1.PublicKey);
             var trans2 = trans1.Payto(transInfo1);
             var destiny2 = new Person();
-            var transInfo2 = new TransactionInfo(sgndTrans1, destiny2.PublicKey);
+            var transInfo2 = new TransferInfo(sgndTrans1, destiny2.PublicKey);
             var trans3 = trans1.Payto(transInfo2);
 
             //Assert

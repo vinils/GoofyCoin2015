@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace GoofyCoin2015
 {
     [Serializable()]
-    public class TransactionInfo
+    public class TransferInfo
     {
         private SignedMessage previousTransSignedByMe;
         private byte[] destinyPk;
@@ -21,21 +21,21 @@ namespace GoofyCoin2015
             get { return previousTransSignedByMe; }
         }
 
-        public TransactionInfo(SignedMessage previousTransSignedByMe, byte[] destinyPk)
+        public TransferInfo(SignedMessage previousTransSignedByMe, byte[] destinyPk)
         {
             this.previousTransSignedByMe = previousTransSignedByMe;
             this.destinyPk = destinyPk;
         }
 
-        public Boolean isValidSignedMsg(TransactionLinkedList previous)
+        public Boolean isValidSignedMsg(TransferLinkedList previous)
         {
             return previousTransSignedByMe.isValidSignedMsg(previous);
         }
 
-        public virtual void CheckTransactionInfo()
+        protected virtual void CheckTransfer()
         {
             if (previousTransSignedByMe == null)
-                throw new Exception("Previous transaction must be informed");
+                throw new Exception("Signed Previous transaction must be informed");
 
             if (destinyPk == null)
                 throw new Exception("Destiny public key must b informed");

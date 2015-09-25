@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace GoofyCoin2015
 {
     [Serializable()]
-    public class GoofyTransaction: TransactionLinkedList
+    public class GoofyTransaction: TransferLinkedList
     {
         private Coin coin;
 
@@ -15,11 +15,15 @@ namespace GoofyCoin2015
         }
 
         public GoofyTransaction(Coin coin, byte[] destinyPk)
-            : base(null, new TransactionInfo(null, destinyPk))
+            : base(null, new TransferInfo(null, destinyPk))
         {
             this.coin = coin;
         }
 
+        public override Boolean isOwnerTransction()
+        {
+            return isGoofyCoin();
+        }
         public override Boolean isValidSignedMsg()
         {
             return coin.isValidSignature();

@@ -8,28 +8,38 @@ using System.Threading.Tasks;
 namespace GoofyCoin2015
 {
     [Serializable()]
-    public class TransactionLinkedList: TransactionInfo, IEnumerable<TransactionLinkedList>
+    public class TransferLinkedList: TransferInfo, IEnumerable<TransferLinkedList>
     {
-        TransactionLinkedList previous;
+        TransferLinkedList previous;
 
-        public TransactionLinkedList Previous
+        public TransferLinkedList Previous
         {
             get { return previous; }
         }
 
-        public TransactionLinkedList(TransactionLinkedList previous, TransactionInfo trans)
+        public TransferLinkedList(TransferLinkedList previous, TransferInfo trans)
             :base(trans.PreviousTransSignedByMe, trans.DestinyPk)
         {
             this.previous = previous;
         }
 
-        public TransactionLinkedList Payto(TransactionInfo trans)
+        public TransferLinkedList Payto(TransferInfo trans)
         {
-            return new TransactionLinkedList(this, trans);
+            return new TransferLinkedList(this, trans);
+        }
+
+        protected override void CheckTransfer()
+        {
+            base.CheckTransfer();
+
+            if (previous == null)
+                throw new Exception("Previous transaction must be informed");
         }
 
         public virtual void CheckTransaction()
         {
+            CheckTransfer();
+
             if (!isOwnerTransction())
                 throw new Exception("The transaction dosen't belong to the owner");
 
@@ -37,7 +47,7 @@ namespace GoofyCoin2015
                 throw new Exception("The signature of the previous transaction and his pk are invalid");
         }
 
-        public Boolean isOwnerTransction()
+        public virtual Boolean isOwnerTransction()
         {
             return isSignerPreviousTransactoin(previous.DestinyPk);
         }
@@ -47,9 +57,9 @@ namespace GoofyCoin2015
             return isValidSignedMsg(previous);
         }
 
-        IEnumerator<TransactionLinkedList> IEnumerable<TransactionLinkedList>.GetEnumerator()
+        IEnumerator<TransferLinkedList> IEnumerable<TransferLinkedList>.GetEnumerator()
         {
-            TransactionLinkedList trans = this;
+            TransferLinkedList trans = this;
 
             do
             {
