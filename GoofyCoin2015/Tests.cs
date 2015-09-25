@@ -18,7 +18,7 @@ namespace GoofyCoin2015
 
             //Act
             var destiny = new Signature(256);
-            var trans = new GoofyTransaction(goofyCoin, destiny.PublicKey);
+            var trans = new GoofyTransfer(goofyCoin, destiny.PublicKey);
 
             //Assert
 
@@ -33,7 +33,7 @@ namespace GoofyCoin2015
                     throw new Exception("This coin signature is invalid");
 
                 //both validation and virtual method
-                ((TransferLinkedList)trans).CheckTransaction();
+                ((TransferLinkedList)trans).CheckTransfers();
             }
             catch (Exception e)
             {
@@ -41,7 +41,7 @@ namespace GoofyCoin2015
             }
         }
 
-        public static void ReceivingAndMaekingTransfer_SouldHaveValidTransaction()
+        public static void ReceivingAndMaekingTransfer_SouldHaveValidTransfer()
         { 
             //Arrange
             var goofy = new Goofy();
@@ -61,17 +61,17 @@ namespace GoofyCoin2015
             try
             {
                 //previous.receiverPk != previousTransSignedByMe.PublicKey;
-                //if(trans2.Previous.TransactionDestinyPk != trans2.PreviousTransSignedByMe.PublicKey)
+                //if(trans2.Previous.transferDestinyPk != trans2.PreviousTransSignedByMe.PublicKey)
                 if(!trans2.isOwnerTransction())
-                throw new Exception("The transaction dosen't belong to the owner");
+                throw new Exception("The transfer dosen't belong to the owner");
 
                 //!previousTransSignedByMe.isValidSignedMsg(previous);
                 //if (!trans2.PreviousTransSignedByMe.isValidSignedMsg(trans2.Previous))
                 if(!trans2.isValidSignedMsg())
-                    throw new Exception("The previous transaction and his signature dont match");
+                    throw new Exception("The previous transfer and his signature dont match");
 
                 //both validation and the virtual methods
-                trans2.CheckTransaction();
+                trans2.CheckTransfers();
 
             }
             catch (Exception e)
@@ -83,7 +83,7 @@ namespace GoofyCoin2015
         /// <summary>
         /// Attacker change a transfer in the middle of the chain and make the chain invalid
         /// </summary>
-        public static void ChengeTransfer_SouldNotAffectTransactionChain()
+        public static void ChengeTransfer_SouldNotAffectTransferChain()
         {
             //Arrange
             var goofy = new Goofy();
@@ -96,19 +96,19 @@ namespace GoofyCoin2015
 
             var changerSgndTrans = changer.SignMessage(trans1);
             var transInfo = new TransferInfo(changerSgndTrans, person1.PublicKey);
-            var changerTransaction = trans1.Payto(transInfo);
+            var changerTransfer = trans1.Payto(transInfo);
 
-            person1.AddTransaction(changerTransaction);
+            person1.AddTransfer(changerTransfer);
 
             var tran3 = person1.PayTo(person2.PublicKey);
 
             //Act
-            changerTransaction.DestinyPk = null;
+            changerTransfer.DestinyPk = null;
 
             //Assert
             try
             {
-                person2.AddTransaction(tran3);
+                person2.AddTransfer(tran3);
             }
             catch 
             {
@@ -116,7 +116,7 @@ namespace GoofyCoin2015
             }
         }
 
-        public static void ReceivingAndMaekingManyTransfer_SouldHaveValidTransactionChain()
+        public static void ReceivingAndMaekingManyTransfer_SouldHaveValidTransferChain()
         {
             //Arrange
             var goofy = new Goofy();
@@ -126,7 +126,7 @@ namespace GoofyCoin2015
             Global.GoofyPk = goofy.PublicKey;
 
             var trans1 = goofy.CreateCoin(person1.PublicKey);
-            person1.AddTransaction(trans1);
+            person1.AddTransfer(trans1);
 
             //Action
             var trans2 = person1.PayTo(person2.PublicKey);
@@ -135,8 +135,8 @@ namespace GoofyCoin2015
             //Assert
             try
             {
-                //testing the for loop checktransaction
-                person2.AddTransaction(trans2);
+                //testing the for loop checkTransfer
+                person2.AddTransfer(trans2);
             }
             catch (Exception e)
             {
@@ -144,7 +144,7 @@ namespace GoofyCoin2015
             }
         }
 
-        public static void DoubleSpendAttack_SouldHaveValidTransactionChain()
+        public static void DoubleSpendAttack_SouldHaveValidTransferChain()
         {
             //Arrange
             var goofy = new Goofy();

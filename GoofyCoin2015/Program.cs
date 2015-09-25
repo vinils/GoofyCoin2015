@@ -8,34 +8,34 @@ namespace GoofyCoin2015
         {
             Counter.Coin = 0;
             Counter.Signature = 0;
-            Counter.Transaction = 0;
+            Counter.Transfer = 0;
 
             var goofy = new Goofy();
             var alice = new Person();
             var bob = new Person();
             var clark = new Person();
 
-            //goofy transaction
+            //goofy Transfer
             var goofyTrans = goofy.CreateCoin(alice.PublicKey);
 
-            //alice transaction
-            alice.AddTransaction(goofyTrans);
+            //alice Transfer
+            alice.AddTransfer(goofyTrans);
             var aliceTrans = alice.PayTo(bob.PublicKey);
 
 
-            //bob transaction
-            bob.AddTransaction(aliceTrans);
+            //bob Transfer
+            bob.AddTransfer(aliceTrans);
             var bobTrans = bob.PayTo(clark.PublicKey);
 
-            //clark transaction
-            clark.AddTransaction(bobTrans);
+            //clark Transfer
+            clark.AddTransfer(bobTrans);
 
 
             Tests.GoofyCreateAndTansferCoin_SouldHaveValidCoin();
-            Tests.ReceivingAndMaekingTransfer_SouldHaveValidTransaction();
-            Tests.ReceivingAndMaekingManyTransfer_SouldHaveValidTransactionChain();
-            Tests.ChengeTransfer_SouldNotAffectTransactionChain();
-            Tests.DoubleSpendAttack_SouldHaveValidTransactionChain();
+            Tests.ReceivingAndMaekingTransfer_SouldHaveValidTransfer();
+            Tests.ReceivingAndMaekingManyTransfer_SouldHaveValidTransferChain();
+            Tests.ChengeTransfer_SouldNotAffectTransferChain();
+            Tests.DoubleSpendAttack_SouldHaveValidTransferChain();
 
             //byte[] publickey;
             //byte[] data;

@@ -33,18 +33,18 @@ namespace GoofyCoin2015
             base.CheckTransfer();
 
             if (previous == null)
-                throw new Exception("Previous transaction must be informed");
+                throw new Exception("Previous transfer must be informed");
         }
 
-        public virtual void CheckTransaction()
+        public virtual void CheckTransfers()
         {
             CheckTransfer();
 
             if (!isOwnerTransction())
-                throw new Exception("The transaction dosen't belong to the owner");
+                throw new Exception("The transfer dosen't belong to the owner");
 
             if (!isValidSignedMsg())
-                throw new Exception("The signature of the previous transaction and his pk are invalid");
+                throw new Exception("The signature of the previous transfer and his pk are invalid");
         }
 
         public virtual Boolean isOwnerTransction()

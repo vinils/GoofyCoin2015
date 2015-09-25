@@ -26,9 +26,9 @@ namespace GoofyCoin2015
             return SignMessage((Object) coin);
         }
 
-        public SignedMessage SignMessage(TransferLinkedList transaction)
+        public SignedMessage SignMessage(TransferLinkedList transfer)
         {
-            return SignMessage((Object) transaction);
+            return SignMessage((Object) transfer);
         }
 
         private SignedMessage SignMessage(Object obj)

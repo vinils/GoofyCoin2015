@@ -35,7 +35,7 @@ namespace GoofyCoin2015
         protected virtual void CheckTransfer()
         {
             if (previousTransSignedByMe == null)
-                throw new Exception("Signed Previous transaction must be informed");
+                throw new Exception("Signed Previous transfer must be informed");
 
             if (destinyPk == null)
                 throw new Exception("Destiny public key must b informed");

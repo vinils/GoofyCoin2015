@@ -6,7 +6,7 @@ namespace GoofyCoin2015
     {
         private static Int32 coin;
         private static Int32 signature;
-        private static Int32 transaction;
+        private static Int32 transfer;
 
         public static Int32 Coin
         {
@@ -20,10 +20,10 @@ namespace GoofyCoin2015
             set { signature = value; }
         }
 
-        public static Int32 Transaction
+        public static Int32 Transfer
         {
-            get { return ++transaction; }
-            set { transaction = value; }
+            get { return ++transfer; }
+            set { transfer = value; }
         }
     }
 }

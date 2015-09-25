@@ -47,7 +47,7 @@
     <Compile Include="Counter.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Goofy.cs" />
-    <Compile Include="GoofyTransaction.cs" />
+    <Compile Include="GoofyTransfer.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
