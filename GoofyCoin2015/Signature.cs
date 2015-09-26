@@ -40,7 +40,7 @@ namespace GoofyCoin2015
             //var sgndData = dsa.SignHash(msgHashed); 
 
             var sgndData = dsa.SignData(bObj);
-            return new SignedMessage(this, sgndData);
+            return new SignedMessage(publicKey, sgndData);
         }
     }
 }

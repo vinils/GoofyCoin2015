@@ -21,9 +21,9 @@ namespace GoofyCoin2015
             private set { sgndMsg = value; }
         }
 
-        public SignedMessage(Signature mySignature, byte[] signedMsg)
+        public SignedMessage(byte[] publicKey, byte[] signedMsg)
         {
-            PublicKey = mySignature.PublicKey;
+            this.PublicKey = publicKey;
             SignedMsg = signedMsg;
         }
 
