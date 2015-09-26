@@ -20,7 +20,7 @@ namespace GoofyCoin2015
             this.previous = previous;
         }
 
-        public TransferList Payto(TransferInfo trans)
+        public TransferList PayTo(TransferInfo trans)
         {
             return new TransferList(this, trans);
         }

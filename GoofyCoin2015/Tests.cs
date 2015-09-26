@@ -40,7 +40,7 @@ namespace GoofyCoin2015
             var sgndTrans1 = person1.SignMessage(trans1);
             var destiny = new Person();
             var transInfo = new TransferInfo(sgndTrans1, destiny.PublicKey);
-            var trans2 = trans1.Payto(transInfo);
+            var trans2 = trans1.PayTo(transInfo);
 
             //Assert
             try
@@ -83,7 +83,7 @@ namespace GoofyCoin2015
             var trans1 = goofy.CreateCoin(changer.PublicKey);
             var changerSgndTrans = changer.SignMessage(trans1);
             var transInfo = new TransferInfo(changerSgndTrans, person1.PublicKey);
-            var changerTransfer = trans1.Payto(transInfo);
+            var changerTransfer = trans1.PayTo(transInfo);
 
             person1.AddTransfer(changerTransfer);
 
@@ -95,7 +95,7 @@ namespace GoofyCoin2015
             //Assert
             try
             {
-                person2.AddTransfer(tran3);
+                person2.CheckTransfers(tran3);
             }
             catch 
             {
@@ -121,7 +121,9 @@ namespace GoofyCoin2015
             try
             {
                 //testing the for loop checkTransfer
-                person2.CheckTransfer(trans2);
+                person2.CheckTransfers(trans2);
+
+                person2.AddTransfer(trans2);
             }
             catch (Exception e)
             {
@@ -141,10 +143,10 @@ namespace GoofyCoin2015
             var sgndTrans1 = attacker.SignMessage(trans1);
             var destiny1 = new Person();
             var transInfo1 = new TransferInfo(sgndTrans1, destiny1.PublicKey);
-            var trans2 = trans1.Payto(transInfo1);
+            var trans2 = trans1.PayTo(transInfo1);
             var destiny2 = new Person();
             var transInfo2 = new TransferInfo(sgndTrans1, destiny2.PublicKey);
-            var trans3 = trans1.Payto(transInfo2);
+            var trans3 = trans1.PayTo(transInfo2);
 
             //Assert
             try

@@ -20,7 +20,7 @@ namespace GoofyCoin2015
 
         public void AddTransfer(TransferList trans)
         {
-            CheckTransfer(trans);
+            CheckTransfers(trans);
             wallet.Add(trans);
         }
 
@@ -29,12 +29,12 @@ namespace GoofyCoin2015
             var trans = wallet.Last();
             var sgndTrans = mySignature.SignMessage(trans);
             var transInfo = new TransferInfo(sgndTrans, publicKey);
-            var paidTransfer = trans.Payto(transInfo);
+            var paidTransfer = trans.PayTo(transInfo);
             wallet.Remove(trans);
 
             return paidTransfer;
         }
-        public virtual void CheckTransfer(TransferList transfer)
+        public virtual void CheckTransfers(TransferList transfer)
         {
             foreach (var trans in transfer)
             {
