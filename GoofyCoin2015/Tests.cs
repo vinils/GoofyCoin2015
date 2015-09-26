@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GoofyCoin2015
 {
@@ -114,8 +110,6 @@ namespace GoofyCoin2015
             var person1 = new Person();
             var person2 = new Person();
 
-            Global.GoofyPk = goofy.PublicKey;
-
             var trans1 = goofy.CreateCoin(person1.PublicKey);
             person1.AddTransfer(trans1);
 
@@ -140,8 +134,6 @@ namespace GoofyCoin2015
             //Arrange
             var goofy = new Goofy();
             var attacker = new Signature(256);
-
-            Global.GoofyPk = goofy.PublicKey;
 
             var trans1 = goofy.CreateCoin(attacker.PublicKey);
 
