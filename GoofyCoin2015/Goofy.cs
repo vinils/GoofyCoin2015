@@ -8,10 +8,9 @@
         }
 
 
-        public GoofyTransfer CreateCoin(byte[] ownerPk)
+        public TransferListCreateCoin CreateCoin(byte[] ownerPk)
         {
-            var goofyCoin = new Coin(mySignature);
-            return new GoofyTransfer(goofyCoin, ownerPk);
+            return new TransferListCreateCoin(ownerPk);
         }
     }
 }

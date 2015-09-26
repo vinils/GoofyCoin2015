@@ -27,23 +27,33 @@ namespace GoofyCoin2015
             this.destinyPk = destinyPk;
         }
 
-        public Boolean isValidSignedMsg(TransferLinkedList previous)
+        protected virtual Boolean isValidSignedMsg(TransferInfo previous)
         {
             return previousTransSignedByMe.isValidSignedMsg(previous);
         }
 
-        protected virtual void CheckTransfer()
-        {
-            if (previousTransSignedByMe == null)
-                throw new Exception("Signed Previous transfer must be informed");
-
-            if (destinyPk == null)
-                throw new Exception("Destiny public key must b informed");
-        }
-
-        protected Boolean isSignerPreviousTransactoin(byte[] ownerPk)
+        protected virtual Boolean isSignerPreviousTransactoin(byte[] ownerPk)
         {
             return previousTransSignedByMe.PublicKey == ownerPk;
+        }
+
+        public virtual Boolean isPrepreviousTransSignedByMeNotNull()
+        {
+            return previousTransSignedByMe != null;
+        }
+
+        public virtual Boolean isDestinyPkNotNull()
+        {
+            return destinyPk != null;
+        }
+
+        public virtual void CheckTransfer()
+        {
+            if (!isPrepreviousTransSignedByMeNotNull())
+                throw new Exception("Signed previous transfer must be informed");
+
+            if (!isDestinyPkNotNull())
+                throw new Exception("Destiny public key must b informed");
         }
     }
 }

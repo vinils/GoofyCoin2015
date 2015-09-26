@@ -8,38 +8,34 @@ using System.Threading.Tasks;
 namespace GoofyCoin2015
 {
     [Serializable()]
-    public class TransferLinkedList: TransferInfo, IEnumerable<TransferLinkedList>
+    public class TransferList: TransferInfo, IEnumerable<TransferList>
     {
-        TransferLinkedList previous;
+        protected TransferList previous;
 
-        public TransferLinkedList Previous
+        public TransferList Previous
         {
             get { return previous; }
         }
 
-        public TransferLinkedList(TransferLinkedList previous, TransferInfo trans)
-            :base(trans.PreviousTransSignedByMe, trans.DestinyPk)
+        protected TransferList(TransferList previous, TransferInfo transferInfo)
+            : base(transferInfo.PreviousTransSignedByMe, transferInfo.DestinyPk )
         {
             this.previous = previous;
         }
 
-        public TransferLinkedList Payto(TransferInfo trans)
+        public TransferList Payto(TransferInfo trans)
         {
-            return new TransferLinkedList(this, trans);
+            return new TransferList(this, trans);
         }
 
-        protected override void CheckTransfer()
+        public override void CheckTransfer()
         {
             base.CheckTransfer();
-
-            if (previous == null)
-                throw new Exception("Previous transfer must be informed");
+            CheckLastTransfer();
         }
 
-        public virtual void CheckTransfers()
+        public virtual void CheckLastTransfer()
         {
-            CheckTransfer();
-
             if (!isOwnerTransction())
                 throw new Exception("The transfer dosen't belong to the owner");
 
@@ -57,9 +53,9 @@ namespace GoofyCoin2015
             return isValidSignedMsg(previous);
         }
 
-        IEnumerator<TransferLinkedList> IEnumerable<TransferLinkedList>.GetEnumerator()
+        IEnumerator<TransferList> IEnumerable<TransferList>.GetEnumerator()
         {
-            TransferLinkedList trans = this;
+            TransferList trans = this;
 
             do
             {

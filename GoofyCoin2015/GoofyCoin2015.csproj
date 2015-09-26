@@ -43,11 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Coin.cs" />
     <Compile Include="Counter.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Goofy.cs" />
-    <Compile Include="GoofyTransfer.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -55,7 +53,8 @@
     <Compile Include="SignedMessage.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="TransferInfo.cs" />
-    <Compile Include="TransferLinkedList.cs" />
+    <Compile Include="TransferList.cs" />
+    <Compile Include="TransferListCreateCoin.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

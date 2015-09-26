@@ -14,26 +14,18 @@ namespace GoofyCoin2015
             var goofySignature = new Signature(256);
             Global.GoofyPk = goofySignature.PublicKey;
 
-            var goofyCoin = new Coin(goofySignature);
-
             //Act
             var destiny = new Signature(256);
-            var trans = new GoofyTransfer(goofyCoin, destiny.PublicKey);
+            var transList = new TransferListCreateCoin(destiny.PublicKey);
 
             //Assert
-
             try
             {
-                //if(trans.Coin.Signature.PublicKey != Global.GoofyPk)
-                if (!trans.isOwnerTransction())
-                    throw new Exception("This coin doenst belong to Goofy");
+                if (!transList.isDestinyPkNotNull())
+                    throw new Exception("Destiny public key must be informed.");
 
-                //if(trans.Coin.Signature.isValidSignature(trans.Coin))
-                if (!trans.isValidSignedMsg())
-                    throw new Exception("This coin signature is invalid");
-
-                //both validation and virtual method
-                ((TransferLinkedList)trans).CheckTransfers();
+                //valid virtua method + all the balidations above
+                transList.CheckTransfer();
             }
             catch (Exception e)
             {
@@ -46,9 +38,6 @@ namespace GoofyCoin2015
             //Arrange
             var goofy = new Goofy();
             var person1 = new Signature(256);
-
-            Global.GoofyPk = goofy.PublicKey;
-
             var trans1 = goofy.CreateCoin(person1.PublicKey);
 
             //Action
@@ -60,18 +49,22 @@ namespace GoofyCoin2015
             //Assert
             try
             {
+                if (!trans2.isPrepreviousTransSignedByMeNotNull())
+                    throw new Exception("The signed previous transfer must be informed");
+
+                if (!trans2.isDestinyPkNotNull())
+                    throw new Exception("The destiny public key must b informed");
+
                 //previous.receiverPk != previousTransSignedByMe.PublicKey;
-                //if(trans2.Previous.transferDestinyPk != trans2.PreviousTransSignedByMe.PublicKey)
-                if(!trans2.isOwnerTransction())
-                throw new Exception("The transfer dosen't belong to the owner");
+                if (!trans2.isOwnerTransction())
+                    throw new Exception("The transfer dosen't belong to the owner");
 
                 //!previousTransSignedByMe.isValidSignedMsg(previous);
-                //if (!trans2.PreviousTransSignedByMe.isValidSignedMsg(trans2.Previous))
-                if(!trans2.isValidSignedMsg())
+                if (!trans2.isValidSignedMsg())
                     throw new Exception("The previous transfer and his signature dont match");
 
-                //both validation and the virtual methods
-                trans2.CheckTransfers();
+                //checking all those validations above and the last goofytransfer
+                trans2.CheckTransfer();
 
             }
             catch (Exception e)
@@ -91,9 +84,7 @@ namespace GoofyCoin2015
             var person1 = new Person();
             var person2 = new Person();
 
-            Global.GoofyPk = goofy.PublicKey;
             var trans1 = goofy.CreateCoin(changer.PublicKey);
-
             var changerSgndTrans = changer.SignMessage(trans1);
             var transInfo = new TransferInfo(changerSgndTrans, person1.PublicKey);
             var changerTransfer = trans1.Payto(transInfo);
@@ -136,7 +127,7 @@ namespace GoofyCoin2015
             try
             {
                 //testing the for loop checkTransfer
-                person2.AddTransfer(trans2);
+                person2.CheckTransfer(trans2);
             }
             catch (Exception e)
             {

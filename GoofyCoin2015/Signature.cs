@@ -21,12 +21,7 @@ namespace GoofyCoin2015
             PublicKey = dsa.Key.Export(CngKeyBlobFormat.EccPublicBlob);
         }
 
-        public SignedMessage SignMessage(Coin coin)
-        {
-            return SignMessage((Object) coin);
-        }
-
-        public SignedMessage SignMessage(TransferLinkedList transfer)
+        public SignedMessage SignMessage(TransferList transfer)
         {
             return SignMessage((Object) transfer);
         }

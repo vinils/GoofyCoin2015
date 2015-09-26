@@ -27,12 +27,7 @@ namespace GoofyCoin2015
             SignedMsg = signedMsg;
         }
 
-        public Boolean isValidSignedMsg(Coin message)
-        {
-            return isValidSignedMsg((Object)message);
-        }
-
-        public Boolean isValidSignedMsg(TransferLinkedList message)
+        public Boolean isValidSignedMsg(TransferInfo message)
         {
             return isValidSignedMsg((Object)message);
         }
