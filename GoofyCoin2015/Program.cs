@@ -6,10 +6,6 @@ namespace GoofyCoin2015
     {
         static void Main(string[] args)
         {
-            Counter.Coin = 0;
-            Counter.Signature = 0;
-            Counter.Transfer = 0;
-
             var goofy = new Goofy();
             var alice = new Person();
             var bob = new Person();

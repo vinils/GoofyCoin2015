@@ -20,8 +20,6 @@ namespace GoofyCoin2015
                 bObj = ms.ToArray();
             }
 
-            var test = ConvertArrayByteToObjet(bObj);
-
             return bObj;
         }
 
