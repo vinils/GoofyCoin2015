@@ -1,40 +1,87 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="Person.cs" company="VLS">
+//     Copyright (c) VLS. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace GoofyCoin2015
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    /// <summary>
+    /// Representation of system interaction of an user or a person
+    /// This user can transfer coins
+    /// </summary>
     public class Person
     {
-        private static readonly int sizeKey = 256;
-        private List<TransferList> wallet = new List<TransferList>();
-        protected Signature mySignature = new Signature(sizeKey);
+        /// <summary>
+        /// Size of the ECDSA key
+        /// </summary>
+        private static readonly int SizeKey = 256;
 
-        public byte[] PublicKey
-        {
-            get { return mySignature.PublicKey; }
-        }
+        /// <summary>
+        /// Received transfers
+        /// </summary>
+        private List<Transfer> wallet = new List<Transfer>();
 
+        /// <summary>
+        /// ECDSA Signature with public and private key
+        /// </summary>
+        private Signature mySignature = new Signature(SizeKey);
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Person"/> class.
+        /// </summary>
         public Person()
         {
         }
 
-        public void AddTransfer(TransferList trans)
+        /// <summary>
+        /// Gets person public key
+        /// </summary>
+        public byte[] PublicKey
         {
-            CheckTransfers(trans);
-            wallet.Add(trans);
+            get { return this.mySignature.PublicKey; }
         }
 
-        public TransferList PayTo(byte[] publicKey)
+        /// <summary>
+        /// Gets ECDSA person signature
+        /// </summary>
+        protected Signature MySignature
         {
-            var trans = wallet.Last();
-            var sgndTrans = mySignature.SignMessage(trans);
-            var transInfo = new TransferInfo(sgndTrans, publicKey);
-            var paidTransfer = trans.PayTo(transInfo);
-            wallet.Remove(trans);
+            get { return this.mySignature; }
+        }
+
+        /// <summary>
+        /// Add a transfer
+        /// </summary>
+        /// <param name="trans">Sent transfer</param>
+        public void AddTransfer(Transfer trans)
+        {
+            this.CheckTransfers(trans);
+            this.wallet.Add(trans);
+        }
+
+        /// <summary>
+        /// Pay the last transfer to some person
+        /// </summary>
+        /// <param name="publicKey">destiny public key</param>
+        /// <returns>sent transfer</returns>
+        public Transfer PayTo(byte[] publicKey)
+        {
+            var trans = this.wallet.Last();
+            var sgndTrans = this.mySignature.SignTransfer(trans);
+            var paidTransfer = trans.PayTo(sgndTrans, publicKey);
+            this.wallet.Remove(trans);
 
             return paidTransfer;
         }
-        public virtual void CheckTransfers(TransferList transfer)
+
+        /// <summary>
+        /// Check if a all the transfer and previous transfers
+        /// </summary>
+        /// <param name="transfer">Sent transfer</param>
+        public virtual void CheckTransfers(Transfer transfer)
         {
             foreach (var trans in transfer)
             {

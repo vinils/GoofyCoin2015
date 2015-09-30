@@ -1,26 +1,40 @@
-﻿using System;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="Tests.cs" company="VLS">
+//     Copyright (c) VLS. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace GoofyCoin2015
 {
+    using System;
+
+    /// <summary>
+    /// Tests scenarios
+    /// </summary>
     public static class Tests
     {
-        public static void GoofyCreateAndTansferCoin_SouldHaveValidCoin()
+        /// <summary>
+        /// Goofy create and transfer a coin should have a valid transfer
+        /// </summary>
+        public static void GoofyCreateAndTansferCoin_ShouldHaveValidCoin()
         {
-            //Arrange
+            // Arrange
+            var coinId = 1;
             var goofySignature = new Signature(256);
             Global.GoofyPk = goofySignature.PublicKey;
 
-            //Act
+            // Act
             var destiny = new Signature(256);
-            var transList = new TransferListCreateCoin(destiny.PublicKey);
+            var transList = new Transfer(coinId, destiny.PublicKey);
 
-            //Assert
+            // Assert
             try
             {
-                if (!transList.isDestinyPkNotNull())
+                if (transList.IsDestinyPkNull())
+                {
                     throw new Exception("Destiny public key must be informed.");
+                }
 
-                //valid virtua method + all the balidations above
+                // valid virtua method + all the balidations above
                 transList.CheckTransfer();
             }
             catch (Exception e)
@@ -29,39 +43,48 @@ namespace GoofyCoin2015
             }
         }
 
-        public static void ReceivingAndMaekingTransfer_SouldHaveValidTransfer()
+        /// <summary>
+        /// Person receiving and making a transfer should have a valid transfer
+        /// </summary>
+        public static void ReceivingAndMakingTransfer_ShouldHaveValidTransfer()
         { 
-            //Arrange
+            // Arrange
             var goofy = new Goofy();
             var person1 = new Signature(256);
             var trans1 = goofy.CreateCoin(person1.PublicKey);
 
-            //Action
-            var sgndTrans1 = person1.SignMessage(trans1);
+            // Action
+            var sgndTrans1 = person1.SignTransfer(trans1);
             var destiny = new Person();
-            var transInfo = new TransferInfo(sgndTrans1, destiny.PublicKey);
-            var trans2 = trans1.PayTo(transInfo);
+            var trans2 = trans1.PayTo(sgndTrans1, destiny.PublicKey);
 
-            //Assert
+            // Assert
             try
             {
-                if (!trans2.isPrepreviousTransSignedByMeNotNull())
+                if (trans2.IsPrepreviousTransSignedByMeNull())
+                {
                     throw new Exception("The signed previous transfer must be informed");
+                }
 
-                if (!trans2.isDestinyPkNotNull())
+                if (trans2.IsDestinyPkNull())
+                {
                     throw new Exception("The destiny public key must b informed");
+                }
 
-                //previous.receiverPk != previousTransSignedByMe.PublicKey;
-                if (!trans2.isOwnerTransction())
+                // previous.receiverPk != previousTransSignedByMe.PublicKey;
+                if (!trans2.IsOwnerTransction())
+                {
                     throw new Exception("The transfer dosen't belong to the owner");
+                }
 
-                //!previousTransSignedByMe.isValidSignedMsg(previous);
-                if (!trans2.isValidSignedMsg())
+                // !previousTransSignedByMe.isValidSignedMsg(previous);
+                if (!trans2.IsValidSignedTransfer())
+                {
                     throw new Exception("The previous transfer and his signature dont match");
+                }
 
-                //checking all those validations above and the last goofytransfer
+                // checking all those validations above and the last goofytransfer
                 trans2.CheckTransfer();
-
             }
             catch (Exception e)
             {
@@ -72,27 +95,26 @@ namespace GoofyCoin2015
         /// <summary>
         /// Attacker change a transfer in the middle of the chain and make the chain invalid
         /// </summary>
-        public static void ChengeTransfer_SouldNotAffectTransferChain()
+        public static void ChengeTransfer_ShouldNotAffectTransferChain()
         {
-            //Arrange
+            // Arrange
             var goofy = new Goofy();
             var changer = new Signature(256);
             var person1 = new Person();
             var person2 = new Person();
 
             var trans1 = goofy.CreateCoin(changer.PublicKey);
-            var changerSgndTrans = changer.SignMessage(trans1);
-            var transInfo = new TransferInfo(changerSgndTrans, person1.PublicKey);
-            var changerTransfer = trans1.PayTo(transInfo);
+            var changerSgndTrans = changer.SignTransfer(trans1);
+            var changerTransfer = trans1.PayTo(changerSgndTrans, person1.PublicKey);
 
             person1.AddTransfer(changerTransfer);
 
             var tran3 = person1.PayTo(person2.PublicKey);
 
-            //Act
+            // Act
             changerTransfer.DestinyPk = null;
 
-            //Assert
+            // Assert
             try
             {
                 person2.CheckTransfers(tran3);
@@ -103,9 +125,12 @@ namespace GoofyCoin2015
             }
         }
 
-        public static void ReceivingAndMaekingManyTransfer_SouldHaveValidTransferChain()
+        /// <summary>
+        /// Receiving and making many transfers should have a valid transfer chain
+        /// </summary>
+        public static void ReceivingAndMakingManyTransfers_ShouldHaveValidTransferChain()
         {
-            //Arrange
+            // Arrange
             var goofy = new Goofy();
             var person1 = new Person();
             var person2 = new Person();
@@ -113,14 +138,13 @@ namespace GoofyCoin2015
             var trans1 = goofy.CreateCoin(person1.PublicKey);
             person1.AddTransfer(trans1);
 
-            //Action
+            // Action
             var trans2 = person1.PayTo(person2.PublicKey);
 
-
-            //Assert
+            // Assert
             try
             {
-                //testing the for loop checkTransfer
+                // testing the for loop checkTransfer
                 person2.CheckTransfers(trans2);
 
                 person2.AddTransfer(trans2);
@@ -131,28 +155,31 @@ namespace GoofyCoin2015
             }
         }
 
-        public static void DoubleSpendAttack_SouldHaveValidTransferChain()
+        /// <summary>
+        /// Double spend attack should not have a valid transfer chain
+        /// </summary>
+        public static void DoubleSpendAttack_ShouldNotHaveValidTransferChain()
         {
-            //Arrange
+            // Arrange
             var goofy = new Goofy();
             var attacker = new Signature(256);
 
             var trans1 = goofy.CreateCoin(attacker.PublicKey);
 
-            //Action
-            var sgndTrans1 = attacker.SignMessage(trans1);
+            // Action
+            var sgndTrans1 = attacker.SignTransfer(trans1);
             var destiny1 = new Person();
-            var transInfo1 = new TransferInfo(sgndTrans1, destiny1.PublicKey);
-            var trans2 = trans1.PayTo(transInfo1);
+            var trans2 = trans1.PayTo(sgndTrans1, destiny1.PublicKey);
             var destiny2 = new Person();
-            var transInfo2 = new TransferInfo(sgndTrans1, destiny2.PublicKey);
-            var trans3 = trans1.PayTo(transInfo2);
+            var trans3 = trans1.PayTo(sgndTrans1, destiny2.PublicKey);
 
-            //Assert
+            // Assert
             try
             {
-                if (trans2.isValidSignedMsg() && trans3.isValidSignedMsg())
+                if (trans2.IsValidSignedTransfer() && trans3.IsValidSignedTransfer())
+                {
                     throw new Exception("Its not allowed to double spend the same coin.");
+                }
             }
             catch (Exception e)
             {

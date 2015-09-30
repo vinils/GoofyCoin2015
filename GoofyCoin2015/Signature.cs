@@ -1,41 +1,73 @@
-﻿using System;
-using System.Security.Cryptography;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="Signature.cs" company="VLS">
+//     Copyright (c) VLS. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace GoofyCoin2015
 {
+    using System;
+    using System.Security.Cryptography;
+
+    /// <summary>
+    /// ECDSA Signature class
+    /// </summary>
     public class Signature
     {
+        /// <summary>
+        /// ECDSA instance class
+        /// </summary>
         private ECDsaCng dsa;
-        protected byte[] publicKey;
 
+        /// <summary>
+        /// Public key
+        /// </summary>
+        private byte[] publicKey;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Signature"/> class.
+        /// </summary>
+        /// <param name="sizeKey">Size of the ECDSA key</param>
+        public Signature(int sizeKey)
+        {
+            this.dsa = new ECDsaCng(sizeKey);
+            this.dsa.HashAlgorithm = Global.HashAlgorithm;
+            this.publicKey = this.dsa.Key.Export(CngKeyBlobFormat.EccPublicBlob);
+        }
+
+        /// <summary>
+        /// Gets or sets Public key
+        /// </summary>
         public byte[] PublicKey
         {
-            get { return publicKey; }
-            protected set { publicKey = value; }
+            get { return this.publicKey; }
+            protected set { this.publicKey = value; }
         }
 
-        public Signature(Int32 sizeKey)
+        /// <summary>
+        /// Serialize and sign the transfer
+        /// </summary>
+        /// <param name="transfer">Transfer class</param>
+        /// <returns>Signed transfer</returns>
+        public SignedTransfer SignTransfer(Transfer transfer)
         {
-            dsa = new ECDsaCng(sizeKey);
-            dsa.HashAlgorithm = Global.HashAlgorithm;
-            PublicKey = dsa.Key.Export(CngKeyBlobFormat.EccPublicBlob);
+            return this.SignTransfer((object)transfer);
         }
 
-        public SignedMessage SignMessage(TransferList transfer)
+        /// <summary>
+        /// Serialize and sign the object
+        /// </summary>
+        /// <param name="obj">Any object</param>
+        /// <returns>Signed object</returns>
+        private SignedTransfer SignTransfer(object obj)
         {
-            return SignMessage((Object) transfer);
-        }
+            var serializedObj = Global.SerializeObject(obj);
 
-        private SignedMessage SignMessage(Object obj)
-        {
-            var bObj = Global.ConvertObjetToArrayByte(obj);
+            //// signing hash data
+            ////var msgHashed = new SHA1Managed().ComputeHash(message);
+            ////var sgndData = dsa.SignHash(msgHashed); 
 
-            // signing hash data
-            //var msgHashed = new SHA1Managed().ComputeHash(message);
-            //var sgndData = dsa.SignHash(msgHashed); 
-
-            var sgndData = dsa.SignData(bObj);
-            return new SignedMessage(publicKey, sgndData);
+            var sgndData = this.dsa.SignData(serializedObj);
+            return new SignedTransfer(this.publicKey, sgndData);
         }
     }
 }
