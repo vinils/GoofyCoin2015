@@ -13,9 +13,14 @@ namespace GoofyCoin2015
     public class Goofy : Person
     {
         /// <summary>
+        /// Ledger root
+        /// </summary>
+        private TransferList ledgerRoot;
+
+        /// <summary>
         /// Coin Id
         /// </summary>
-        private static int coinId = 0;
+        private int coinId = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Goofy"/> class.
@@ -30,9 +35,32 @@ namespace GoofyCoin2015
         /// </summary>
         /// <param name="destinyPk">Destiny public key</param>
         /// <returns>Transfer class</returns>
-        public Transfer CreateCoin(byte[] destinyPk)
+        public TransferList CreateCoin(byte[] destinyPk)
         {
-            return new Transfer(++coinId, destinyPk);
+            var sgndCoin = this.MySignature.SignCoin(++this.coinId);
+            var coin = new Coin(this.coinId, sgndCoin);
+            var info = new TransferInfo(coin, destinyPk);
+            this.ledgerRoot = new TransferList(info);
+
+            return this.ledgerRoot;
+        }
+
+        /// <summary>
+        /// Check ledger transfers
+        /// </summary>
+        public virtual void CheckTransfers()
+        {
+            foreach (var trans in this.ledgerRoot)
+            {
+                if (!trans.IsNextNull())
+                {
+                    ////// check the data chain
+                    //// trans.CheckNextTransfer();
+
+                    // check the hash chain
+                    trans.CheckNextTransfer();
+                }
+            }
         }
     }
 }

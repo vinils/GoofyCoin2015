@@ -44,30 +44,66 @@ namespace GoofyCoin2015
         }
 
         /// <summary>
-        /// Serialize and sign the transfer
+        /// Sign a serialized coin id
         /// </summary>
-        /// <param name="transfer">Transfer class</param>
-        /// <returns>Signed transfer</returns>
-        public SignedTransfer SignTransfer(Transfer transfer)
+        /// <param name="coinId">Coin id</param>
+        /// <returns>Signed coin</returns>
+        public SignedMessage SignCoin(int coinId)
         {
-            return this.SignTransfer((object)transfer);
+            var serializedObj = Global.SerializeObject(coinId);
+            return this.SignMsg(serializedObj);
         }
 
         /// <summary>
-        /// Serialize and sign the object
+        /// Sign the hash of the transfer info
         /// </summary>
-        /// <param name="obj">Any object</param>
-        /// <returns>Signed object</returns>
-        private SignedTransfer SignTransfer(object obj)
+        /// <param name="info">Transfer info</param>
+        /// <returns>return the signed hash</returns>
+        public SignedHash SignTransfer(TransferInfo info)
         {
-            var serializedObj = Global.SerializeObject(obj);
+            return this.SignTransfer(new TransferInfoHash(info));
+        }
 
+        /// <summary>
+        /// Sign the hash of the transfer info
+        /// </summary>
+        /// <param name="hash">hash of the transfer info</param>
+        /// <returns>return the signed hash</returns>
+        protected SignedHash SignTransfer(TransferInfoHash hash)
+        {
+            return this.SignHash(hash.HashCode);
+        }
+
+        /// <summary>
+        /// Sign a hash
+        /// </summary>
+        /// <param name="hash">hash information</param>
+        /// <returns>return signed hash</returns>
+        protected SignedHash SignHash(byte[] hash)
+        {
             //// signing hash data
             ////var msgHashed = new SHA1Managed().ComputeHash(message);
             ////var sgndData = dsa.SignHash(msgHashed); 
 
-            var sgndData = this.dsa.SignData(serializedObj);
-            return new SignedTransfer(this.publicKey, sgndData);
+            ////var sgndData = this.dsa.SignData(msg);
+            var sgndData = this.dsa.SignHash(hash);
+            return new SignedHash(hash, this.publicKey, sgndData);
+        }
+
+        /// <summary>
+        /// Sign a message
+        /// </summary>
+        /// <param name="msg">Message instance</param>
+        /// <returns>Signed message</returns>
+        protected SignedMessage SignMsg(byte[] msg)
+        {
+            //// signing hash data
+            ////var msgHashed = new SHA1Managed().ComputeHash(message);
+            ////var sgndData = dsa.SignHash(msgHashed); 
+
+            ////var sgndData = this.dsa.SignData(msg);
+            var sgndData = this.dsa.SignData(msg);
+            return new SignedMessage(this.publicKey, sgndData);
         }
     }
 }

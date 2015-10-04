@@ -22,7 +22,7 @@ namespace GoofyCoin2015
         /// <summary>
         /// Received transfers
         /// </summary>
-        private List<Transfer> wallet = new List<Transfer>();
+        private List<TransferList> wallet = new List<TransferList>();
 
         /// <summary>
         /// ECDSA Signature with public and private key
@@ -56,7 +56,7 @@ namespace GoofyCoin2015
         /// Add a transfer
         /// </summary>
         /// <param name="trans">Sent transfer</param>
-        public void AddTransfer(Transfer trans)
+        public void AddTransfer(TransferList trans)
         {
             this.CheckTransfers(trans);
             this.wallet.Add(trans);
@@ -65,13 +65,14 @@ namespace GoofyCoin2015
         /// <summary>
         /// Pay the last transfer to some person
         /// </summary>
-        /// <param name="publicKey">destiny public key</param>
+        /// <param name="destinyPk">destiny public key</param>
         /// <returns>sent transfer</returns>
-        public Transfer PayTo(byte[] publicKey)
+        public TransferList PayTo(byte[] destinyPk)
         {
             var trans = this.wallet.Last();
-            var sgndTrans = this.mySignature.SignTransfer(trans);
-            var paidTransfer = trans.PayTo(sgndTrans, publicKey);
+            var sgndTrans = this.mySignature.SignTransfer(trans.Info);
+            var paidTransfer = trans.PayTo(sgndTrans, destinyPk);
+
             this.wallet.Remove(trans);
 
             return paidTransfer;
@@ -81,12 +82,9 @@ namespace GoofyCoin2015
         /// Check if a all the transfer and previous transfers
         /// </summary>
         /// <param name="transfer">Sent transfer</param>
-        public virtual void CheckTransfers(Transfer transfer)
+        public virtual void CheckTransfers(TransferList transfer)
         {
-            foreach (var trans in transfer)
-            {
-                trans.CheckTransfer();
-            }
+            transfer.Info.Check();
         }
     }
 }

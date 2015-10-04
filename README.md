@@ -1,4 +1,7 @@
 ﻿# GoofyCoin2015
+
+Implementing hash table to fix memory pointer unduly changes
+
 Simpliest digital currency
 
 GoofyCoin

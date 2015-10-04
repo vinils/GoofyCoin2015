@@ -18,24 +18,24 @@ namespace GoofyCoin2015
         /// <param name="args">Console instructions</param>
         public static void Main(string[] args)
         {
-            var goofy = new Goofy();
-            var alice = new Person();
-            var bob = new Person();
-            var clark = new Person();
+            ////var goofy = new Goofy();
+            ////var alice = new Person();
+            ////var bob = new Person();
+            ////var clark = new Person();
 
-            // goofy Transfer
-            var goofyTrans = goofy.CreateCoin(alice.PublicKey);
+            ////// goofy Transfer
+            ////var goofyTrans = goofy.CreateCoin(alice.PublicKey);
 
-            // alice Transfer
-            alice.AddTransfer(goofyTrans);
-            var aliceTrans = alice.PayTo(bob.PublicKey);
+            ////// alice Transfer
+            ////alice.AddTransfer(goofyTrans);
+            ////var aliceTrans = alice.PayTo(bob.PublicKey);
 
-            // bob Transfer
-            bob.AddTransfer(aliceTrans);
-            var bobTrans = bob.PayTo(clark.PublicKey);
+            ////// bob Transfer
+            ////bob.AddTransfer(aliceTrans);
+            ////var bobTrans = bob.PayTo(clark.PublicKey);
 
-            // clark Transfer
-            clark.AddTransfer(bobTrans);
+            ////// clark Transfer
+            ////clark.AddTransfer(bobTrans);
 
             Tests.GoofyCreateAndTansferCoin_ShouldHaveValidCoin();
             Tests.ReceivingAndMakingTransfer_ShouldHaveValidTransfer();
