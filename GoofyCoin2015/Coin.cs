@@ -1,33 +1,101 @@
-﻿using System;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="Coin.cs" company="VLS">
+//     Copyright (c) VLS. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace GoofyCoin2015
 {
-    [Serializable()]
+    using System;
+
+    /// <summary>
+    /// Create a new coin
+    /// </summary>
+    [Serializable]
     public class Coin
     {
-        private Int32 coinId;
-        [field: NonSerializedAttribute()]
-        private SignedMessage signature;
+        /// <summary>
+        /// Coin id
+        /// </summary>
+        private int coinId;
 
-        public Coin(Signature mySignature)
+        /// <summary>
+        /// Signed coin id
+        /// </summary>
+        private SignedMessage sgndCoin;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Coin"/> class.
+        /// </summary>
+        /// <param name="coinId">Coin id</param>
+        /// <param name="sgndCoin">signed coin</param>
+        public Coin(int coinId, SignedMessage sgndCoin)
         {
-            coinId = Counter.Coin;
-            Signature = mySignature.SignMessage(this);
+            this.coinId = coinId;
+            this.sgndCoin = sgndCoin;
         }
 
-        public SignedMessage Signature
+        /// <summary>
+        /// Gets Coin id
+        /// </summary>
+        public int CoinId
         {
-            get { return signature; }
-            set { signature = value; }
+            get { return this.coinId; }
         }
 
-        public Boolean isGoofyCoin()
+        /// <summary>
+        /// Gets Signed coin
+        /// </summary>
+        public SignedMessage SignedCoin
         {
-            return Signature.PublicKey == Global.GoofyPk;
+            get { return this.sgndCoin; }
         }
-        public Boolean isValidSignature()
+
+        /// <summary>
+        /// Is a goofy coin?
+        /// </summary>
+        /// <returns>Return true if is a goofy coin</returns>
+        public bool IsGoofyCoin()
         {
-            return Signature.isValidSignedMsg(this);
+            return this.SignedCoin.PublicKey == Global.GoofyPk;
+        }
+
+        /// <summary>
+        /// Is the a valid coin id?
+        /// </summary>
+        /// <returns>return true if its bigger than 0</returns>
+        public virtual bool IsValidCoinId()
+        {
+            return this.coinId >= 0;
+        }
+
+        /// <summary>
+        /// Validate if this coin has a valid signature
+        /// </summary>
+        /// <returns>Return true if its a valid coin signature</returns>
+        public bool IsValidSignature()
+        {
+            return this.SignedCoin.IsValidSignedMsg(this);
+        }
+
+        /// <summary>
+        /// Check the coin
+        /// </summary>
+        public void Check()
+        {
+            if (!this.IsGoofyCoin())
+            {
+                throw new Exception("This is not a goofy coin");
+            }
+
+            if (!this.IsValidCoinId())
+            {
+                throw new Exception("This is not valid coin");
+            }
+
+            if (!this.IsValidSignature())
+            {
+                throw new Exception("This is not a valid signature");
+            }
         }
     }
 }

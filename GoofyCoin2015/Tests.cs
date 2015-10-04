@@ -19,12 +19,14 @@ namespace GoofyCoin2015
         {
             // Arrange
             var coinId = 1;
-            var goofySignature = new Signature(256);
-            Global.GoofyPk = goofySignature.PublicKey;
+            var goofy = new Signature(256);
+            Global.GoofyPk = goofy.PublicKey;
 
             // Act
+            var sgndCoin = goofy.SignCoin(coinId);
+            var coin = new Coin(coinId, sgndCoin);
             var destiny = new Signature(256);
-            var transList = new Transfer(coinId, destiny.PublicKey);
+            var transList = new TransferList(coin, destiny.PublicKey);
 
             // Assert
             try
@@ -34,8 +36,22 @@ namespace GoofyCoin2015
                     throw new Exception("Destiny public key must be informed.");
                 }
 
+                if (!transList.IsCreateCoin())
+                {
+                    throw new Exception("This should be a create coin transfer.");
+                }
+
+                ////if (!info.coin.IsGoofyCoin())
+                ////    throw new Exception("This is not a goofy coin");
+
+                ////if (!IsValidCoinId())
+                ////    throw new Exception("This is not valid coin");
+
+                ////if (!IsValidSignature())
+                ////    throw new Exception("This is not a valid signature");
+
                 // valid virtua method + all the balidations above
-                transList.CheckTransfer();
+                transList.Check();
             }
             catch (Exception e)
             {
@@ -61,14 +77,19 @@ namespace GoofyCoin2015
             // Assert
             try
             {
-                if (trans2.IsPrepreviousTransSignedByMeNull())
-                {
-                    throw new Exception("The signed previous transfer must be informed");
-                }
-
                 if (trans2.IsDestinyPkNull())
                 {
                     throw new Exception("The destiny public key must b informed");
+                }
+
+                if (trans2.IsCreateCoin())
+                {
+                    throw new Exception("This should not be a create coin transfer.");
+                }
+
+                if (trans2.IsPrepreviousTransSignedByMeNull())
+                {
+                    throw new Exception("The signed previous transfer must be informed");
                 }
 
                 // previous.receiverPk != previousTransSignedByMe.PublicKey;
@@ -84,7 +105,7 @@ namespace GoofyCoin2015
                 }
 
                 // checking all those validations above and the last goofytransfer
-                trans2.CheckTransfer();
+                trans2.Check();
             }
             catch (Exception e)
             {

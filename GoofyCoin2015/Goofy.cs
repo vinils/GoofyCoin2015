@@ -15,7 +15,7 @@ namespace GoofyCoin2015
         /// <summary>
         /// Coin Id
         /// </summary>
-        private static int coinId = 0;
+        private int coinId = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Goofy"/> class.
@@ -30,9 +30,11 @@ namespace GoofyCoin2015
         /// </summary>
         /// <param name="destinyPk">Destiny public key</param>
         /// <returns>Transfer class</returns>
-        public Transfer CreateCoin(byte[] destinyPk)
+        public TransferList CreateCoin(byte[] destinyPk)
         {
-            return new Transfer(++coinId, destinyPk);
+            var sgndCoin = MySignature.SignCoin(++this.coinId);
+            var coin = new Coin(this.coinId, sgndCoin);
+            return new TransferList(coin, destinyPk);
         }
     }
 }

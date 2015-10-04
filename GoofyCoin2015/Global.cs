@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 namespace GoofyCoin2015
 {
-    using System;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Security.Cryptography;
@@ -30,23 +29,36 @@ namespace GoofyCoin2015
         /// </summary>
         public static byte[] GoofyPk
         {
-            get
-            {
-                return goofyPk;
-            }
+            get { return goofyPk; }
+            set { goofyPk = value; }
+        }
 
-            set
-            {
-                goofyPk = value;
-            }
+        /// <summary>
+        /// Serialize a transfer
+        /// </summary>
+        /// <param name="trans">transfer instance</param>
+        /// <returns>Serialized transfer</returns>
+        public static byte[] SerializeObject(TransferInfo trans)
+        {
+            return SerializeObject((object)trans);
+        }
+
+        /// <summary>
+        /// Serialize a coin
+        /// </summary>
+        /// <param name="coin">Coin instance</param>
+        /// <returns>Serialized coin</returns>
+        public static byte[] SerializeObject(int coin)
+        {
+            return SerializeObject((object)coin);
         }
 
         /// <summary>
         /// Serialize an object
         /// </summary>
-        /// <param name="obj">Any object</param>
-        /// <returns>serialized object</returns>
-        public static byte[] SerializeObject(object obj)
+        /// <param name="obj">Object instance</param>
+        /// <returns>Serialized object</returns>
+        private static byte[] SerializeObject(object obj)
         {
             byte[] ret;
             BinaryFormatter bf = new BinaryFormatter();
@@ -64,9 +76,9 @@ namespace GoofyCoin2015
         /// </summary>
         /// <param name="byts">Serialized object</param>
         /// <returns>deserialized object</returns>
-        public static object DeserializeObject(byte[] byts)
+        private static object DeserializeObject(byte[] byts)
         {
-           object ret;
+            object ret;
 
             using (var memStream = new System.IO.MemoryStream())
             {

@@ -44,30 +44,41 @@ namespace GoofyCoin2015
         }
 
         /// <summary>
+        /// Sign a serialized coin id
+        /// </summary>
+        /// <param name="coinId">Coin id</param>
+        /// <returns>Signed coin</returns>
+        public SignedMessage SignCoin(int coinId)
+        {
+            var serializedObj = Global.SerializeObject(coinId);
+            return this.SignMsg(serializedObj);
+        }
+
+        /// <summary>
         /// Serialize and sign the transfer
         /// </summary>
         /// <param name="transfer">Transfer class</param>
         /// <returns>Signed transfer</returns>
-        public SignedTransfer SignTransfer(Transfer transfer)
+        public SignedMessage SignTransfer(TransferList transfer)
         {
-            return this.SignTransfer((object)transfer);
+            var serializedObj = Global.SerializeObject(transfer);
+            return this.SignMsg(serializedObj);
         }
 
         /// <summary>
-        /// Serialize and sign the object
+        /// Sign a message
         /// </summary>
-        /// <param name="obj">Any object</param>
-        /// <returns>Signed object</returns>
-        private SignedTransfer SignTransfer(object obj)
+        /// <param name="msg">Serialize object</param>
+        /// <returns>Signed message</returns>
+        protected SignedMessage SignMsg(byte[] msg)
         {
-            var serializedObj = Global.SerializeObject(obj);
-
             //// signing hash data
             ////var msgHashed = new SHA1Managed().ComputeHash(message);
             ////var sgndData = dsa.SignHash(msgHashed); 
 
-            var sgndData = this.dsa.SignData(serializedObj);
-            return new SignedTransfer(this.publicKey, sgndData);
+            ////var sgndData = this.dsa.SignData(msg);
+            var sgndData = this.dsa.SignData(msg);
+            return new SignedMessage(this.publicKey, sgndData);
         }
     }
 }
