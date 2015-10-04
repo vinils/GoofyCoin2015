@@ -32,7 +32,8 @@ namespace GoofyCoin2015
         /// <summary>
         /// Initializes a new instance of the <see cref="TransferList"/> class.
         /// </summary>
-        /// <param name="info">transfer info</param>
+        /// <param name="coin">Coin instance</param>
+        /// <param name="destinyPk">Destiny public key</param>
         public TransferList(Coin coin, byte[] destinyPk)
         {
             this.info = new TransferInfo(coin, destinyPk);
@@ -42,10 +43,11 @@ namespace GoofyCoin2015
         /// Initializes a new instance of the <see cref="TransferList"/> class.
         /// </summary>
         /// <param name="next">Next transfer</param>
-        /// <param name="info">Transfer info</param>
-        protected TransferList(TransferList next, TransferInfo info)
+        /// <param name="prevSgndHash">Signed hash of the previous transfer</param>
+        /// <param name="destinyPk">Destiny public key</param>
+        protected TransferList(TransferList next, SignedHash prevSgndHash, byte[] destinyPk)
         {
-            this.info = info;
+            this.info = new TransferInfo(prevSgndHash, destinyPk);
             this.next = next;
         }
 
@@ -87,8 +89,7 @@ namespace GoofyCoin2015
         public TransferList PayTo(SignedHash prevSgndHash, byte[] destinyPk)
         {
             this.sgndHash = prevSgndHash;
-            var info = new TransferInfo(prevSgndHash, destinyPk);
-            this.next = new TransferList(null, info);
+            this.next = new TransferList(null, prevSgndHash, destinyPk);
 
             return this.next;
         }
