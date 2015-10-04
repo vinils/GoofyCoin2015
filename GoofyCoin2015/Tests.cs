@@ -27,7 +27,6 @@ namespace GoofyCoin2015
             var coin = new Coin(coinId, sgndCoin);
             var destiny = new Signature(256);
             var info = new TransferInfo(coin, destiny.PublicKey);
-            var trans = new TransferList(info);
 
             // Assert
             try
@@ -52,7 +51,7 @@ namespace GoofyCoin2015
                 ////    throw new Exception("This is not a valid signature");
 
                 // valid virtua method + all the balidations above
-                trans.Info.Check();
+                info.Check();
             }
             catch (Exception e)
             {

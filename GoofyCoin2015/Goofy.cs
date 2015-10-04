@@ -39,8 +39,7 @@ namespace GoofyCoin2015
         {
             var sgndCoin = this.MySignature.SignCoin(++this.coinId);
             var coin = new Coin(this.coinId, sgndCoin);
-            var info = new TransferInfo(coin, destinyPk);
-            this.ledgerRoot = new TransferList(info);
+            this.ledgerRoot = new TransferList(coin, destinyPk);
 
             return this.ledgerRoot;
         }

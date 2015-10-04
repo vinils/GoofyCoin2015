@@ -91,14 +91,14 @@ namespace GoofyCoin2015
 
             if (this.IsSignedDataNull())
             {
-                throw new Exception("Signed message must be signed");
+                throw new Exception("Signed data must be informed.");
             }
         }
 
         /// <summary>
         /// Is the signed message belong to the message and public key
         /// </summary>
-        /// <param name="msg">Serialized object</param>
+        /// <param name="msg">Serialized message</param>
         /// <param name="publicKey">public key</param>
         /// <returns>true if the signed message belong to the message and public key</returns>
         protected bool IsValidSignedMsg(byte[] msg, byte[] publicKey)

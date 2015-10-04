@@ -33,9 +33,9 @@ namespace GoofyCoin2015
         /// Initializes a new instance of the <see cref="TransferList"/> class.
         /// </summary>
         /// <param name="info">transfer info</param>
-        public TransferList(TransferInfo info)
+        public TransferList(Coin coin, byte[] destinyPk)
         {
-            this.info = info;
+            this.info = new TransferInfo(coin, destinyPk);
         }
 
         /// <summary>
@@ -44,8 +44,8 @@ namespace GoofyCoin2015
         /// <param name="next">Next transfer</param>
         /// <param name="info">Transfer info</param>
         protected TransferList(TransferList next, TransferInfo info)
-        : this(info)
         {
+            this.info = info;
             this.next = next;
         }
 
@@ -112,9 +112,9 @@ namespace GoofyCoin2015
         }
 
         /// <summary>
-        /// Is a valid transfer info hash
+        /// Is a valid hash transfer info
         /// </summary>
-        /// <returns>return true if its a valid transfer hash</returns>
+        /// <returns>return true if its a valid hash transfer</returns>
         public bool IsValidHash()
         {
             return this.sgndHash.Compare(this.info);
